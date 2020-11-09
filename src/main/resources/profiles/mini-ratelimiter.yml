@@ -1,0 +1,12 @@
+algType: Fixed
+appConfigs:
+  - appId: 12345
+    apiConfigs:
+      - url: /via/test
+        limit: 1000
+      - url: /via/t3
+        limit: 1000
+  - appId: app-2
+    apiConfigs:
+      - url: /via/t1
+        limit: 10

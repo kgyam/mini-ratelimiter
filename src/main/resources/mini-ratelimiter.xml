@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ruleConfig>
+    <algType>Fixed</algType>
+    <appConfigs>
+        <appId>12345</appId>
+        <apiConfigs>
+            <url>/via/test</url>
+            <limit>1000</limit>
+        </apiConfigs>
+    </appConfigs>
+    <appConfigs>
+        <appId>app-12</appId>
+        <apiConfigs>
+            <url>/via/test</url>
+            <limit>1000</limit>
+        </apiConfigs>
+    </appConfigs>
+</ruleConfig>
