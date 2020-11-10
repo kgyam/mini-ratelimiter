@@ -1,11 +1,10 @@
 package com.kgyam.ratelimiter;
 
 import com.kgyam.ratelimiter.alg.*;
-import com.kgyam.ratelimiter.config.ApiLimitConfig;
-import com.kgyam.ratelimiter.config.AppRuleConfig;
-import com.kgyam.ratelimiter.config.RuleConfig;
+import com.kgyam.ratelimiter.config.*;
 import com.kgyam.ratelimiter.config.parser.ConfigParser;
 import com.kgyam.ratelimiter.config.parser.ParserDelegate;
+import com.kgyam.ratelimiter.enums.AlgType;
 
 import java.util.List;
 import java.util.Map;
@@ -85,10 +84,20 @@ public class RateLimiter {
      * @return
      */
     private LimitAlg getAlg(ApiLimitConfig apiLimitConfig) {
-        String type = apiLimitConfig.getAlgType();
-        int limit = apiLimitConfig.getLimit();
-
-        return null;
+        AlgConfig algConfig = apiLimitConfig.getAlgConfig();
+        String type = algConfig.getAlgType();
+        LimitAlg alg = null;
+        if (AlgType.FIXED.name().equalsIgnoreCase(type)) {
+            alg = new FixedAlg(apiLimitConfig.getLimit());
+        } else if (AlgType.SLIDING.name().equalsIgnoreCase(type)) {
+            SlidingAlgConfig _slidingAlgConfig = (SlidingAlgConfig) algConfig;
+            alg = new SlidingAlg(apiLimitConfig.getLimit(), _slidingAlgConfig.getSpan());
+        } else if (AlgType.TOKEN.name().equalsIgnoreCase(type)) {
+            TokenBucketAlgConfig _tokenBucketAlgConfig = (TokenBucketAlgConfig) algConfig;
+            alg = new TokenAlg(apiLimitConfig.getLimit(), _tokenBucketAlgConfig.getPermit());
+        } else if (AlgType.LEAKY.name().equalsIgnoreCase(type)) {
+        }
+        return alg;
     }
 
     private boolean isEnabled() {

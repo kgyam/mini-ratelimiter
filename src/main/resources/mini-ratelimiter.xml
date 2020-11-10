@@ -5,7 +5,10 @@
             <appId>12345</appId>
             <apiConfigs>
                 <apiConfig>
-                    <algType>Fixed</algType>
+                    <algConfig>
+                        <algType>FIXED</algType>
+                        <span>2000</span>
+                    </algConfig>
                     <url>/via/test</url>
                     <limit>1000</limit>
                 </apiConfig>
@@ -15,7 +18,10 @@
             <appId>app-12</appId>
             <apiConfigs>
                 <apiConfig>
-                    <algType>Fixed</algType>
+                    <algConfig>
+                        <algType>TOKEN</algType>
+                        <permit>1000</permit>
+                    </algConfig>
                     <url>/via/test</url>
                     <limit>1000</limit>
                 </apiConfig>

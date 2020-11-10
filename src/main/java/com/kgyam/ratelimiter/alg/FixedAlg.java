@@ -5,6 +5,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * 固定窗口
+ */
 public class FixedAlg implements LimitAlg {
     private static final long TRY_LOCK_TIMEOUT = 200L;  // 200ms.
     private AtomicInteger counter = new AtomicInteger(0);

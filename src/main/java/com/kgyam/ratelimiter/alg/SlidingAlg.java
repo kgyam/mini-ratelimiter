@@ -12,13 +12,14 @@ public class SlidingAlg implements LimitAlg {
     private static final long TRY_LOCK_TIMEOUT = 200L;  // 200ms.
     private Node pointer;
     private static final int SLOT = 5;
-    private static final long TIME = 1000;
+    private long span;
     private final int limit;
     private long slotTime;
-    private ReentrantLock lock;
+    private ReentrantLock lock = new ReentrantLock();
 
-    public SlidingAlg(int limit) {
+    public SlidingAlg(int limit, long span) {
         this.limit = limit;
+        this.span = span;
         init();
     }
 
@@ -40,8 +41,7 @@ public class SlidingAlg implements LimitAlg {
             }
         }
         pointer.next = _current;
-        slotTime = TIME / SLOT;
-        lock = new ReentrantLock();
+        slotTime = span / SLOT;
     }
 
     public boolean tryAcquire() {

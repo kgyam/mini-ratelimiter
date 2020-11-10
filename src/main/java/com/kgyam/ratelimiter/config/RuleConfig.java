@@ -1,5 +1,8 @@
 package com.kgyam.ratelimiter.config;
 
+import org.apache.commons.collections4.Trie;
+import org.apache.commons.collections4.TrieUtils;
+
 import java.util.List;
 
 /**
@@ -24,6 +27,13 @@ public class RuleConfig {
         this.appConfigs = appConfigs;
     }
 
+
+    /**
+     * 优化，匹配字符串效率低
+     * @param appId
+     * @param url
+     * @return
+     */
     public ApiLimitConfig getApiLimit(String appId, String url) {
         for (AppRuleConfig appConfig : appConfigs) {
             String configAppId = appConfig.getAppId();

@@ -17,29 +17,20 @@ public class ApiLimitConfig {
     private int limit;
 
 
-    private String algType;
+    private AlgConfig algConfig;
 
 
-    public String getAlgType() {
-        return algType;
+    public AlgConfig getAlgConfig() {
+        return algConfig;
     }
 
-    public void setAlgType(String algType) {
-        this.algType = algType;
+    public void setAlgConfig(AlgConfig algConfig) {
+        this.algConfig = algConfig;
     }
 
     public ApiLimitConfig() {
     }
 
-    public ApiLimitConfig(String url, int limit, String algType) {
-        this.url = url;
-        if (limit <= 0) {
-            this.limit = 0;
-        } else {
-            this.limit = limit;
-        }
-        this.algType = algType;
-    }
 
     public String getUrl() {
         return url;
