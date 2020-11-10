@@ -6,23 +6,14 @@ import java.util.List;
  * 整体的限流配置类
  */
 public class RuleConfig {
-    private String algType;
+
     List<AppRuleConfig> appConfigs;
 
     public RuleConfig() {
     }
 
-    public RuleConfig(String algType, List<AppRuleConfig> appConfigs) {
-        this.algType = algType;
+    public RuleConfig(List<AppRuleConfig> appConfigs) {
         this.appConfigs = appConfigs;
-    }
-
-    public String getAlgType() {
-        return algType;
-    }
-
-    public void setAlgType(String algType) {
-        this.algType = algType;
     }
 
     public List<AppRuleConfig> getAppConfigs() {
@@ -33,11 +24,19 @@ public class RuleConfig {
         this.appConfigs = appConfigs;
     }
 
-    @Override
-    public String toString() {
-        return "RuleConfig{" +
-                "algType=" + algType +
-                ", appConfigs=" + appConfigs +
-                '}';
+    public ApiLimitConfig getApiLimit(String appId, String url) {
+        for (AppRuleConfig appConfig : appConfigs) {
+            String configAppId = appConfig.getAppId();
+            if (configAppId.equalsIgnoreCase(appId)) {
+                List<ApiLimitConfig> apiLimitConfigs = appConfig.getApiConfigs();
+                for (ApiLimitConfig apiLimitConfig : apiLimitConfigs) {
+                    String configUrl = apiLimitConfig.getUrl();
+                    if (configUrl.equalsIgnoreCase(url)) {
+                        return apiLimitConfig;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

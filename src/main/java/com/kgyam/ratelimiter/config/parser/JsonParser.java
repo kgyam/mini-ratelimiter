@@ -5,17 +5,17 @@ import com.kgyam.ratelimiter.config.RuleConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
 
-public class PropertiesParser implements ConfigParser {
+public class JsonParser implements ConfigParser {
+    @Override
     public RuleConfig load(InputStream in) {
-        Properties p = new Properties();
+        ObjectMapper objectMapper = new ObjectMapper();
+        RuleConfig ruleConfig = null;
         try {
-            p.load(in);
-            return new RuleConfig();
+            ruleConfig = objectMapper.readValue(in, RuleConfig.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return ruleConfig;
     }
 }

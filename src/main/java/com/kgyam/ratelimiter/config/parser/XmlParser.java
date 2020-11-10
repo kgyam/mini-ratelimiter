@@ -8,14 +8,17 @@ import com.thoughtworks.xstream.XStream;
 import java.io.InputStream;
 
 public class XmlParser implements ConfigParser {
-    public RuleConfig load(InputStream in) {
+    private static final String RULE_CONFIG = "ruleConfig";
+    private static final String APP_CONFIG = "appConfig";
+    private static final String API_CONFIG = "apiConfig";
 
+    public RuleConfig load(InputStream in) {
         XStream xStream = new XStream();
         //将别名与xml名字对应
-        xStream.alias("ruleConfig", RuleConfig.class);
-        xStream.alias("appConfig", AppRuleConfig.class);
-        xStream.alias("apiConfig", ApiLimitConfig.class);
-        Object o = xStream.fromXML(in);
-        return null;
+        xStream.alias(RULE_CONFIG, RuleConfig.class);
+        xStream.alias(APP_CONFIG, AppRuleConfig.class);
+        xStream.alias(API_CONFIG, ApiLimitConfig.class);
+        RuleConfig ruleConfig = (RuleConfig) xStream.fromXML(in);
+        return ruleConfig;
     }
 }

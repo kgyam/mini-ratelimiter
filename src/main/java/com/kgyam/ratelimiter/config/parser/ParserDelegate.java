@@ -18,6 +18,7 @@ public class ParserDelegate implements ConfigParser {
                 ConfigType.Yml,
                 ConfigType.Xml};
         parserMap = new HashMap();
+        parserMap.put(ConfigType.Json, new JsonParser());
         parserMap.put(ConfigType.Yml, new YmlParser());
         parserMap.put(ConfigType.Xml, new XmlParser());
         parserMap.put(ConfigType.Properties, new PropertiesParser());
@@ -46,6 +47,7 @@ public class ParserDelegate implements ConfigParser {
     enum ConfigType {
         Yml(".yml"),
         Xml(".xml"),
+        Json(".json"),
         Properties(".properties");
 
         private String suffix;

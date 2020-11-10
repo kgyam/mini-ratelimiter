@@ -1,7 +1,7 @@
 package com.kgyam.ratelimiter.alg;
 
-public class LeakyAlg implements LimterAlg {
-    public boolean tryAcquire(String appid, String url) {
+public class LeakyAlg implements LimitAlg {
+    public boolean tryAcquire() {
         return false;
     }
 }

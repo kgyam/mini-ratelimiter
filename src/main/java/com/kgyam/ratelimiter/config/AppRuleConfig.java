@@ -1,6 +1,5 @@
 package com.kgyam.ratelimiter.config;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,11 +10,13 @@ public class AppRuleConfig {
     /*
     用户id,外部得请求需要有对应得appid才能请求
      */
+
     private String appId;
 
     /*
     存放app下对应得api限流配置
      */
+
     List<ApiLimitConfig> apiConfigs;
 
     public AppRuleConfig() {
