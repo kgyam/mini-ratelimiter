@@ -1,6 +1,6 @@
-package com.kgyam.ratelimiter.config.parser;
+package com.kgyam.throttler.config.parser;
 
-import com.kgyam.ratelimiter.config.RuleConfig;
+import com.kgyam.throttler.config.RuleConfig;
 
 import java.io.IOException;
 import java.io.InputStream;

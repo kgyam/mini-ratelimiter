@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ruleConfig>
+    <algConfig type="FIXED">
+        <span value="2000"/>
+    </algConfig>
+    <appConfigs>
+        <appConfig appId="app-123">
+            <apiConfigs>
+                <apiConfig limit="1000" url="/via/test"/>
+            </apiConfigs>
+        </appConfig>
+        <appConfig appId="app-234">
+            <apiConfigs>
+                <apiConfig limit="100" url="/via/test"/>
+                <apiConfig limit="1000" url="/via/leaky"/>
+            </apiConfigs>
+        </appConfig>
+    </appConfigs>
+</ruleConfig>

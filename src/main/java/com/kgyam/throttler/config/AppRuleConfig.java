@@ -1,5 +1,6 @@
-package com.kgyam.ratelimiter.config;
+package com.kgyam.throttler.config;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public class AppRuleConfig {
     存放app下对应得api限流配置
      */
 
-    List<ApiLimitConfig> apiConfigs;
+    List<ApiLimitConfig> apiConfigs = new ArrayList<>();
 
     public AppRuleConfig() {
     }

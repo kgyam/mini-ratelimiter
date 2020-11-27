@@ -1,18 +1,26 @@
-package com.kgyam.ratelimiter.config;
+package com.kgyam.throttler.config;
 
-import org.apache.commons.collections4.Trie;
-import org.apache.commons.collections4.TrieUtils;
-
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 整体的限流配置类
+ * 限流配置类
  */
 public class RuleConfig {
 
-    List<AppRuleConfig> appConfigs;
+    private AlgConfig algConfig;
+    List<AppRuleConfig> appConfigs = new ArrayList<>();
 
     public RuleConfig() {
+    }
+
+
+    public AlgConfig getAlgConfig() {
+        return algConfig;
+    }
+
+    public void setAlgConfig(AlgConfig algConfig) {
+        this.algConfig = algConfig;
     }
 
     public RuleConfig(List<AppRuleConfig> appConfigs) {
@@ -30,6 +38,7 @@ public class RuleConfig {
 
     /**
      * 优化，匹配字符串效率低
+     *
      * @param appId
      * @param url
      * @return

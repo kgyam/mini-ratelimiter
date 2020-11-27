@@ -1,8 +1,8 @@
-import com.kgyam.ratelimiter.RateLimiter;
+import com.kgyam.throttler.Throttler;
 
 public class Main {
     public static void main(String[] args) {
-        RateLimiter limiter=new RateLimiter();
+        Throttler limiter = new Throttler();
 
     }
 }

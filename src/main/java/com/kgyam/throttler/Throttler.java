@@ -1,16 +1,19 @@
-package com.kgyam.ratelimiter;
+package com.kgyam.throttler;
 
-import com.kgyam.ratelimiter.alg.*;
-import com.kgyam.ratelimiter.config.*;
-import com.kgyam.ratelimiter.config.parser.ConfigParser;
-import com.kgyam.ratelimiter.config.parser.ParserDelegate;
-import com.kgyam.ratelimiter.enums.AlgType;
+import com.kgyam.throttler.alg.*;
+import com.kgyam.throttler.config.*;
+import com.kgyam.throttler.config.parser.ConfigParser;
+import com.kgyam.throttler.config.parser.ParserDelegate;
+import com.kgyam.throttler.enums.AlgType;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class RateLimiter {
+/**
+ * 限流器
+ */
+public class Throttler {
     /*
     规则配置
      */
@@ -28,7 +31,7 @@ public class RateLimiter {
      */
     private boolean enable;
 
-    public RateLimiter() {
+    public Throttler() {
         init();
     }
 
@@ -59,16 +62,19 @@ public class RateLimiter {
 
 
     /**
-     * 插入到计算器容器
+     * 将计算器放到容器
      *
      * @param appId
      * @param apiLimitConfig
      * @return
      */
-    private String putCounter(String appId, ApiLimitConfig apiLimitConfig) {
+    private synchronized String putCounter(String appId, ApiLimitConfig apiLimitConfig) {
+
         String key = createKey(appId, apiLimitConfig.getUrl());
-        LimitAlg alg = getAlg(apiLimitConfig);
-        counterMap.putIfAbsent(key, alg);
+        LimitAlg alg = getAlg(apiLimitConfig.getLimit());
+        if (alg != null) {
+            counterMap.putIfAbsent(key, alg);
+        }
         return key;
     }
 
@@ -80,22 +86,27 @@ public class RateLimiter {
     /**
      * 生成api对应的计算器
      *
-     * @param apiLimitConfig
      * @return
      */
-    private LimitAlg getAlg(ApiLimitConfig apiLimitConfig) {
-        AlgConfig algConfig = apiLimitConfig.getAlgConfig();
-        String type = algConfig.getAlgType();
+    private LimitAlg getAlg(int limit) {
+
+        if (ruleConfig == null) {
+            return null;
+        }
+        AlgConfig algConfig = ruleConfig.getAlgConfig();
+        if (algConfig == null) {
+            return null;
+        }
+        AlgType algType = algConfig.getAlgType();
         LimitAlg alg = null;
-        if (AlgType.FIXED.name().equalsIgnoreCase(type)) {
-            alg = new FixedAlg(apiLimitConfig.getLimit());
-        } else if (AlgType.SLIDING.name().equalsIgnoreCase(type)) {
-            SlidingAlgConfig _slidingAlgConfig = (SlidingAlgConfig) algConfig;
-            alg = new SlidingAlg(apiLimitConfig.getLimit(), _slidingAlgConfig.getSpan());
-        } else if (AlgType.TOKEN.name().equalsIgnoreCase(type)) {
-            TokenBucketAlgConfig _tokenBucketAlgConfig = (TokenBucketAlgConfig) algConfig;
-            alg = new TokenAlg(apiLimitConfig.getLimit(), _tokenBucketAlgConfig.getPermit());
-        } else if (AlgType.LEAKY.name().equalsIgnoreCase(type)) {
+        if (AlgType.FIXED.equals(algType)) {
+            alg = new FixedAlg(limit);
+        } else if (AlgType.SLIDING.equals(algType)) {
+            alg = new SlidingAlg(limit, algConfig.getSpan());
+        } else if (AlgType.TOKEN_BUCKET.equals(algType)) {
+            alg = new TokenBucketAlg(limit, algConfig.getPermit());
+        } else if (AlgType.LEAKY.equals(algType)) {
+            alg = new LeakyAlg(limit, algConfig.getRate());
         }
         return alg;
     }
@@ -123,11 +134,10 @@ public class RateLimiter {
         String key = createKey(appId, url);
         LimitAlg counter = counterMap.get(key);
         if (counter == null) {
-            //算法找不到，重新设置
+            //算法找不到，重新设置，这里有并发问题。putCounter只能控制进程内并发问题
             key = putCounter(appId, apiLimitConfig);
             counter = counterMap.get(key);
         }
-
         return counter.tryAcquire();
     }
 

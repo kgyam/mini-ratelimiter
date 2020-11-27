@@ -1,4 +1,4 @@
-package com.kgyam.ratelimiter.alg;
+package com.kgyam.throttler.alg;
 
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -9,19 +9,27 @@ import java.util.concurrent.TimeUnit;
 /**
  * 令牌桶
  */
-public class TokenAlg implements LimitAlg {
+public class TokenBucketAlg implements LimitAlg {
 
+    /*
+    允许通过的请求数，可理解为令牌桶里面的最大令牌数
+     */
     private final int limit;
     /*
-    往bucket存放令牌得速率
+    令牌桶生成速率
      */
     private long permit;
+    /*
+    令牌桶
+     */
     private Queue<Integer> bucket;
+    private boolean nodelay;
     private ScheduledExecutorService pool;
 
-    public TokenAlg(int limit, long permit) {
+    public TokenBucketAlg(int limit, long permit, boolean nodelay) {
         this.limit = limit;
         this.permit = permit;
+        this.nodelay = nodelay;
         init();
     }
 
@@ -34,13 +42,17 @@ public class TokenAlg implements LimitAlg {
             return;
         }
         bucket = new ArrayBlockingQueue<>(limit, false);
-        for (int i = 0; i < limit; i++) {
-            bucket.offer(1);
+
+        //无需延迟生成令牌，初始化马上生成好所有令牌
+        if (nodelay) {
+            for (int i = 0; i < limit; i++) {
+                bucket.offer(1);
+            }
         }
 
         pool = Executors.newScheduledThreadPool(10);
         pool.scheduleAtFixedRate(() -> {
-            boolean _flag = bucket.offer(1);
+            bucket.offer(1);
         }, 1000, permit, TimeUnit.MILLISECONDS);
     }
 

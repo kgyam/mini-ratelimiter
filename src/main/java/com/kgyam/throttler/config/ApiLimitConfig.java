@@ -1,4 +1,4 @@
-package com.kgyam.ratelimiter.config;
+package com.kgyam.throttler.config;
 
 /**
  * 每个APP下，对应的url的配置类
@@ -15,18 +15,6 @@ public class ApiLimitConfig {
      */
 
     private int limit;
-
-
-    private AlgConfig algConfig;
-
-
-    public AlgConfig getAlgConfig() {
-        return algConfig;
-    }
-
-    public void setAlgConfig(AlgConfig algConfig) {
-        this.algConfig = algConfig;
-    }
 
     public ApiLimitConfig() {
     }
